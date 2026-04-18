@@ -1,0 +1,95 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.wrapper {
+  overflow-x: auto;
+  @include custom-scrollbar;
+}
+
+.monthRow {
+  display: grid;
+  grid-auto-flow: column;
+  margin-left: 32px;
+  margin-bottom: 4px;
+  font-size: 11px;
+  color: $text-muted;
+}
+
+.monthLabel {
+  white-space: nowrap;
+}
+
+.grid {
+  display: flex;
+  gap: 4px;
+}
+
+.dayLabels {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-right: 4px;
+}
+
+.dayLabel {
+  height: 12px;
+  font-size: 10px;
+  color: $text-muted;
+  line-height: 12px;
+}
+
+.cells {
+  display: flex;
+  gap: 2px;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cell {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  transition: all $transition-fast;
+
+  &:hover {
+    outline: 1px solid $text-secondary;
+  }
+}
+
+.empty {
+  background: transparent;
+}
+
+.level0 {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.level1 {
+  background: rgba(124, 58, 237, 0.25);
+}
+
+.level2 {
+  background: rgba(124, 58, 237, 0.45);
+}
+
+.level3 {
+  background: rgba(124, 58, 237, 0.65);
+}
+
+.level4 {
+  background: rgba(124, 58, 237, 0.9);
+}
+
+.legend {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 8px;
+  justify-content: flex-end;
+  font-size: 11px;
+  color: $text-muted;
+}
