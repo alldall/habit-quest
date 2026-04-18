@@ -1,0 +1,164 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.page {
+  max-width: 900px;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 24px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+
+  @include mobile {
+    grid-template-columns: 1fr;
+  }
+}
+
+.levelCard {
+  @include card;
+  @include flex-center;
+  flex-direction: column;
+  gap: 12px;
+  padding: 32px;
+}
+
+.levelCircle {
+  position: relative;
+  width: 140px;
+  height: 140px;
+}
+
+.levelRing {
+  width: 100%;
+  height: 100%;
+}
+
+.levelInner {
+  position: absolute;
+  inset: 0;
+  @include flex-center;
+  flex-direction: column;
+}
+
+.levelNum {
+  font-size: 40px;
+  font-weight: 800;
+  background: linear-gradient(135deg, $accent-purple-light, $accent-blue);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1;
+}
+
+.levelText {
+  font-size: 12px;
+  color: $text-muted;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.totalXp {
+  color: $text-secondary;
+  font-size: 14px;
+}
+
+.radarCard {
+  @include card;
+  padding: 20px;
+}
+
+.cardTitle {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.statCard {
+  @include card;
+  border-left: 3px solid var(--stat-color);
+}
+
+.statHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.statIcon {
+  font-size: 28px;
+}
+
+.statName {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--stat-color);
+}
+
+.statDesc {
+  font-size: 12px;
+  color: $text-muted;
+}
+
+.statLevel {
+  margin-left: auto;
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--stat-color);
+}
+
+.progressBar {
+  height: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 4px;
+}
+
+.progressFill {
+  height: 100%;
+  background: var(--stat-color);
+  border-radius: 3px;
+  transition: width $transition-slow;
+}
+
+.progressText {
+  font-size: 11px;
+  color: $text-muted;
+  margin-bottom: 10px;
+}
+
+.statEffect {
+  font-size: 12px;
+  color: $text-secondary;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: $radius-sm;
+  margin-bottom: 10px;
+}
+
+.habitList {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-top: 10px;
+  border-top: 1px solid $border-color;
+}
+
+.habitItem {
+  @include flex-between;
+  font-size: 13px;
+  color: $text-secondary;
+}
+
+.bestStreak {
+  font-size: 11px;
+  color: $accent-yellow;
+}
