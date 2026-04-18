@@ -1,0 +1,174 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 200;
+}
+
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 201;
+  background: $bg-secondary;
+  border: 1px solid $border-color;
+  border-radius: $radius-lg;
+  padding: 28px;
+  width: 90%;
+  max-width: 480px;
+  max-height: 90vh;
+  overflow-y: auto;
+  @include custom-scrollbar;
+}
+
+.title {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.label {
+  font-size: 13px;
+  color: $text-secondary;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.input {
+  padding: 12px 16px;
+  background: $bg-card;
+  border: 1px solid $border-color;
+  border-radius: $radius-sm;
+  color: $text-primary;
+  font-size: 15px;
+  outline: none;
+  transition: border-color $transition-base;
+
+  &:focus {
+    border-color: $accent-purple;
+  }
+
+  &::placeholder {
+    color: $text-muted;
+  }
+}
+
+.iconGrid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 4px;
+
+  @include mobile {
+    grid-template-columns: repeat(6, 1fr);
+  }
+}
+
+.iconBtn {
+  @include flex-center;
+  width: 100%;
+  aspect-ratio: 1;
+  font-size: 20px;
+  background: $bg-card;
+  border: 2px solid transparent;
+  border-radius: $radius-sm;
+  cursor: pointer;
+  transition: all $transition-base;
+
+  &:hover {
+    background: $bg-card-hover;
+  }
+}
+
+.iconActive {
+  border-color: $accent-purple;
+  background: rgba(124, 58, 237, 0.15);
+}
+
+.statGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.statBtn {
+  @include flex-center;
+  gap: 8px;
+  padding: 12px;
+  background: $bg-card;
+  border: 2px solid transparent;
+  border-radius: $radius-sm;
+  color: $text-primary;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all $transition-base;
+
+  &:hover {
+    background: $bg-card-hover;
+  }
+}
+
+.statActive {
+  background: rgba(124, 58, 237, 0.1);
+}
+
+.actions {
+  @include flex-between;
+  gap: 12px;
+  padding-top: 8px;
+  border-top: 1px solid $border-color;
+}
+
+.rightActions {
+  display: flex;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.cancelBtn {
+  @include button-base;
+  background: transparent;
+  color: $text-secondary;
+  border: 1px solid $border-color;
+
+  &:hover {
+    background: $bg-card;
+  }
+}
+
+.saveBtn {
+  @include button-base;
+  background: $accent-purple;
+  color: white;
+
+  &:hover {
+    background: lighten($accent-purple, 8%);
+  }
+}
+
+.deleteBtn {
+  @include button-base;
+  background: transparent;
+  color: $accent-red;
+  border: 1px solid rgba($accent-red, 0.3);
+
+  &:hover {
+    background: rgba($accent-red, 0.1);
+  }
+}
