@@ -1,16 +1,55 @@
-import { XP_PER_COMPLETION, XP_PER_LEVEL, STREAK_MULTIPLIER, STREAK_MULTIPLIER_THRESHOLD, MAX_LEVEL } from './constants';
+import {
+  XP_PER_COMPLETION,
+  STREAK_MULTIPLIER,
+  STREAK_MULTIPLIER_THRESHOLD,
+  MAX_LEVEL,
+  DIFFICULTY_LEVELS,
+  DEFAULT_DIFFICULTY,
+} from './constants';
+
+function difficultyMultiplier(difficulty) {
+  return DIFFICULTY_LEVELS[difficulty || DEFAULT_DIFFICULTY]?.multiplier ?? 1;
+}
 
 export function getDateKey(date = new Date()) {
   return date.toISOString().split('T')[0];
 }
 
+// Progressive XP: early levels are fast, later levels require more
+export function getXpForLevel(level) {
+  return 30 + level * 20;
+}
+
+export function getTotalXpForLevel(level) {
+  if (level <= 1) return 0;
+  let total = 0;
+  for (let i = 1; i < level; i++) {
+    total += getXpForLevel(i);
+  }
+  return total;
+}
+
 export function calculateLevel(xp) {
-  return Math.min(Math.floor(xp / XP_PER_LEVEL) + 1, MAX_LEVEL);
+  let level = 1;
+  let accumulated = 0;
+  while (level < MAX_LEVEL) {
+    accumulated += getXpForLevel(level);
+    if (xp < accumulated) break;
+    level++;
+  }
+  return level;
 }
 
 export function calculateXpProgress(xp) {
-  const currentLevelXp = xp % XP_PER_LEVEL;
-  return (currentLevelXp / XP_PER_LEVEL) * 100;
+  const level = calculateLevel(xp);
+  const xpAtCurrentLevel = getTotalXpForLevel(level);
+  const xpNeeded = getXpForLevel(level);
+  const current = xp - xpAtCurrentLevel;
+  return {
+    current,
+    needed: xpNeeded,
+    percentage: Math.min((current / xpNeeded) * 100, 100),
+  };
 }
 
 export function calculateStreak(completions, habitId) {
@@ -55,9 +94,10 @@ export function calculateBestStreak(completions, habitId) {
   return bestStreak;
 }
 
-export function getXpForCompletion(streak) {
-  const multiplier = streak >= STREAK_MULTIPLIER_THRESHOLD ? STREAK_MULTIPLIER : 1;
-  return Math.floor(XP_PER_COMPLETION * multiplier);
+export function getXpForCompletion(streak, difficulty) {
+  const streakMult = streak >= STREAK_MULTIPLIER_THRESHOLD ? STREAK_MULTIPLIER : 1;
+  const diffMult = difficultyMultiplier(difficulty);
+  return Math.floor(XP_PER_COMPLETION * streakMult * diffMult);
 }
 
 export function calculateStats(habits, completions) {
@@ -72,7 +112,9 @@ export function calculateStats(habits, completions) {
     habitIds.forEach((habitId) => {
       const habit = habits.find((h) => h.id === habitId);
       if (habit && stats[habit.stat]) {
-        stats[habit.stat].xp += XP_PER_COMPLETION;
+        stats[habit.stat].xp += Math.floor(
+          XP_PER_COMPLETION * difficultyMultiplier(habit.difficulty)
+        );
       }
     });
   });
@@ -85,8 +127,12 @@ export function calculateStats(habits, completions) {
 }
 
 export function getOverallLevel(stats) {
-  const totalLevels = Object.values(stats).reduce((sum, s) => sum + s.level, 0);
-  return Math.floor(totalLevels / 4);
+  const totalXp = Object.values(stats).reduce((sum, s) => sum + s.xp, 0);
+  return calculateLevel(totalXp);
+}
+
+export function getOverallXp(stats) {
+  return Object.values(stats).reduce((sum, s) => sum + s.xp, 0);
 }
 
 export function getCompletionRate(completions, habitId, days = 30) {

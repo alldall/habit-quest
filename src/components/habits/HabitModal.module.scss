@@ -128,6 +128,53 @@
   background: rgba(124, 58, 237, 0.1);
 }
 
+.difficultyGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+
+  @include mobile {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.difficultyBtn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 10px 6px;
+  background: $bg-card;
+  border: 2px solid transparent;
+  border-radius: $radius-sm;
+  color: $text-primary;
+  cursor: pointer;
+  transition: all $transition-base;
+
+  &:hover {
+    background: $bg-card-hover;
+  }
+}
+
+.difficultyActive {
+  background: color-mix(in srgb, var(--diff-color) 15%, transparent);
+}
+
+.difficultyIcon {
+  font-size: 18px;
+}
+
+.difficultyName {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.difficultyMult {
+  font-size: 11px;
+  color: $text-muted;
+  font-weight: 700;
+}
+
 .actions {
   @include flex-between;
   gap: 12px;

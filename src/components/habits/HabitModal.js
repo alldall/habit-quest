@@ -2,18 +2,19 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { STAT_TYPES, HABIT_ICONS } from '@/lib/constants';
+import { STAT_TYPES, HABIT_ICONS, DIFFICULTY_LEVELS, DEFAULT_DIFFICULTY } from '@/lib/constants';
 import styles from './HabitModal.module.scss';
 
 export default function HabitModal({ habit, onSave, onDelete, onClose }) {
   const [name, setName] = useState(habit?.name || '');
   const [icon, setIcon] = useState(habit?.icon || '🎯');
   const [stat, setStat] = useState(habit?.stat || 'strength');
+  const [difficulty, setDifficulty] = useState(habit?.difficulty || DEFAULT_DIFFICULTY);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!name.trim()) return;
-    onSave({ name: name.trim(), icon, stat });
+    onSave({ name: name.trim(), icon, stat, difficulty });
   };
 
   return (
@@ -79,6 +80,28 @@ export default function HabitModal({ habit, onSave, onDelete, onClose }) {
                 >
                   <span>{s.icon}</span>
                   <span>{s.name}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className={styles.field}>
+            <label className={styles.label}>Сложность</label>
+            <div className={styles.difficultyGrid}>
+              {Object.values(DIFFICULTY_LEVELS).map((d) => (
+                <button
+                  key={d.key}
+                  type="button"
+                  className={`${styles.difficultyBtn} ${difficulty === d.key ? styles.difficultyActive : ''}`}
+                  style={{
+                    '--diff-color': d.color,
+                    borderColor: difficulty === d.key ? d.color : 'transparent',
+                  }}
+                  onClick={() => setDifficulty(d.key)}
+                >
+                  <span className={styles.difficultyIcon}>{d.icon}</span>
+                  <span className={styles.difficultyName}>{d.name}</span>
+                  <span className={styles.difficultyMult}>×{d.multiplier}</span>
                 </button>
               ))}
             </div>

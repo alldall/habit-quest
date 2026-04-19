@@ -1,0 +1,142 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.root {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 900;
+}
+
+.xpPopup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 32px;
+  font-weight: 800;
+  z-index: 1000;
+  text-shadow: 0 0 20px currentColor;
+  pointer-events: none;
+}
+
+.multiplier {
+  font-size: 18px;
+  margin-left: 6px;
+  color: $accent-yellow;
+}
+
+.burstWrapper {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 999;
+  pointer-events: none;
+}
+
+.particles {
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+.particle {
+  position: absolute;
+  width: var(--size);
+  height: var(--size);
+  border-radius: 50%;
+  animation: particleBurst 0.7s var(--delay) ease-out forwards;
+  opacity: 0;
+}
+
+@keyframes particleBurst {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--tx), var(--ty)) scale(0);
+    opacity: 0;
+  }
+}
+
+.levelUpOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  @include flex-center;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+}
+
+.levelUpCard {
+  @include flex-center;
+  flex-direction: column;
+  gap: 8px;
+  padding: 40px 60px;
+  background: $bg-card;
+  border-radius: $radius-xl;
+  border: 2px solid $accent-purple;
+  box-shadow: 0 0 60px rgba(124, 58, 237, 0.4);
+  position: relative;
+  overflow: visible;
+}
+
+.levelUpIcon {
+  font-size: 48px;
+}
+
+.levelUpTitle {
+  font-size: 18px;
+  font-weight: 600;
+  color: $text-secondary;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.levelUpNumber {
+  font-size: 72px;
+  font-weight: 900;
+  background: linear-gradient(135deg, $accent-purple-light, $accent-yellow);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1;
+}
+
+.levelUpSub {
+  font-size: 14px;
+  color: $text-muted;
+}
+
+.statLevelUp {
+  position: fixed;
+  top: 80px;
+  right: 20px;
+  z-index: 1500;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.statToast {
+  @include glass;
+  padding: 12px 20px;
+  border-radius: $radius-md;
+  border-left: 3px solid;
+  font-size: 14px;
+  font-weight: 600;
+  color: $text-primary;
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}

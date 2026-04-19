@@ -7,7 +7,7 @@ import {
 } from 'recharts';
 import { useGame } from '@/components/GameProvider';
 import { STAT_TYPES, MAX_LEVEL } from '@/lib/constants';
-import { calculateXpProgress, calculateBestStreak } from '@/lib/gameEngine';
+import { calculateXpProgress, calculateBestStreak, getOverallXp } from '@/lib/gameEngine';
 import styles from './page.module.scss';
 
 export default function CharacterPage() {
@@ -21,7 +21,8 @@ export default function CharacterPage() {
     fullMark: MAX_LEVEL,
   }));
 
-  const totalXp = Object.values(stats).reduce((sum, s) => sum + s.xp, 0);
+  const totalXp = getOverallXp(stats);
+  const overallProgress = calculateXpProgress(totalXp);
 
   return (
     <div className={styles.page}>
@@ -49,7 +50,7 @@ export default function CharacterPage() {
                 strokeWidth="6"
                 strokeLinecap="round"
                 strokeDasharray={`${2 * Math.PI * 44}`}
-                strokeDashoffset={`${2 * Math.PI * 44 * (1 - calculateXpProgress(totalXp) / 100)}`}
+                strokeDashoffset={`${2 * Math.PI * 44 * (1 - overallProgress.percentage / 100)}`}
                 transform="rotate(-90 50 50)"
               />
               <defs>
@@ -65,6 +66,9 @@ export default function CharacterPage() {
             </div>
           </div>
           <div className={styles.totalXp}>{totalXp} XP всего</div>
+          <div className={styles.xpToNext}>
+            {overallProgress.current} / {overallProgress.needed} XP до уровня {overallLevel + 1}
+          </div>
         </motion.div>
 
         {/* Radar chart */}
@@ -126,11 +130,11 @@ export default function CharacterPage() {
               <div className={styles.progressBar}>
                 <div
                   className={styles.progressFill}
-                  style={{ width: `${progress}%` }}
+                  style={{ width: `${progress.percentage}%` }}
                 />
               </div>
               <div className={styles.progressText}>
-                {playerStat.xp % 100} / 100 XP до следующего уровня
+                {progress.current} / {progress.needed} XP до уровня {playerStat.level + 1}
               </div>
 
               <div className={styles.statEffect}>

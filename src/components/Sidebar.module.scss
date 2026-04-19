@@ -13,14 +13,14 @@
   flex-direction: column;
   z-index: 100;
   transition: transform $transition-base;
-
-  @include mobile {
-    transform: translateX(-100%);
-  }
 }
 
 .sidebarOpen {
-  transform: translateX(0) !important;
+  transform: translateX(0);
+}
+
+.sidebarClosed {
+  transform: translateX(-100%);
 }
 
 .overlay {
@@ -32,60 +32,78 @@
     inset: 0;
     background: rgba(0, 0, 0, 0.6);
     z-index: 99;
+    animation: fadeIn 0.2s ease;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
   }
 }
 
 .burger {
-  display: none;
   position: fixed;
   top: 16px;
   left: 16px;
-  z-index: 101;
-  width: 40px;
-  height: 40px;
-  background: $bg-card;
-  border: 1px solid $border-color;
+  z-index: 110;
+  width: 44px;
+  height: 44px;
+  background: rgba(22, 33, 62, 0.85);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(167, 139, 250, 0.35);
   border-radius: $radius-sm;
   cursor: pointer;
   @include flex-center;
+  padding: 0;
+  transition: left $transition-base, background $transition-base, border-color $transition-base;
 
-  @include mobile {
-    display: flex;
+  &:hover {
+    background: rgba(124, 58, 237, 0.3);
+    border-color: $accent-purple-light;
   }
 }
 
-.burgerLine {
+.burgerOpen {
+  @include tablet-up {
+    left: 174px;
+  }
+}
+
+.burgerBox {
   position: relative;
   width: 20px;
+  height: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.burgerLine {
+  display: block;
+  width: 100%;
   height: 2px;
   background: $text-primary;
-  transition: all $transition-base;
+  border-radius: 2px;
+  transition: transform $transition-base, opacity $transition-base;
+  transform-origin: center;
+}
 
-  &::before,
-  &::after {
-    content: '';
-    position: absolute;
-    width: 100%;
-    height: 2px;
-    background: $text-primary;
-    left: 0;
-    transition: all $transition-base;
+.burgerOpen .burgerLine {
+  &:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
   }
 
-  &::before { top: -6px; }
-  &::after { top: 6px; }
+  &:nth-child(2) {
+    opacity: 0;
+  }
 
-  &.open {
-    background: transparent;
-
-    &::before {
-      top: 0;
-      transform: rotate(45deg);
-    }
-    &::after {
-      top: 0;
-      transform: rotate(-45deg);
-    }
+  &:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
   }
 }
 
@@ -93,12 +111,15 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 24px 20px;
+  padding: 24px 20px 24px 68px;
   border-bottom: 1px solid $border-color;
+  min-height: 72px;
 }
 
 .logoIcon {
   font-size: 24px;
+  position: relative;
+  left: -33%;
 }
 
 .logoText {
@@ -108,6 +129,8 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  position: relative;
+  left: -33%;
 }
 
 .nav {

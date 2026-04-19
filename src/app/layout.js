@@ -2,6 +2,8 @@ import localFont from "next/font/local";
 import "@/styles/globals.scss";
 import Sidebar from "@/components/Sidebar";
 import { GameProvider } from "@/components/GameProvider";
+import PageTransition from "@/components/PageTransition";
+import RouteLoader from "@/components/RouteLoader";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -19,10 +21,11 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={geistSans.variable}>
         <GameProvider>
+          <RouteLoader />
           <div className="app-layout">
             <Sidebar />
             <main className="main-content">
-              {children}
+              <PageTransition>{children}</PageTransition>
             </main>
           </div>
         </GameProvider>

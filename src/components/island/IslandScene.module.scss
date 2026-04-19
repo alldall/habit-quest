@@ -1,0 +1,149 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.wrapper {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: $radius-lg;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    animation: skyPulse 18s ease-in-out infinite;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background:
+      radial-gradient(ellipse 80% 50% at 20% 85%, rgba(255, 120, 180, 0.35), transparent 60%),
+      radial-gradient(ellipse 70% 40% at 80% 25%, rgba(120, 220, 255, 0.28), transparent 60%),
+      radial-gradient(ellipse 60% 30% at 50% 10%, rgba(190, 120, 255, 0.3), transparent 60%);
+    mix-blend-mode: screen;
+    animation: auroraDrift 24s ease-in-out infinite;
+  }
+
+  canvas {
+    position: relative;
+    z-index: 1;
+    border-radius: $radius-lg;
+  }
+}
+
+.skyDay::before {
+  background: linear-gradient(
+    180deg,
+    #1a2d8a 0%,
+    #4a3d9c 18%,
+    #a7478e 42%,
+    #ef6d9c 68%,
+    #ffb48c 90%,
+    #ffcf9e 100%
+  );
+}
+
+.skyDusk::before {
+  background: linear-gradient(
+    180deg,
+    #1a1140 0%,
+    #3a1f6b 20%,
+    #7a2d8e 45%,
+    #d14a87 70%,
+    #ff8a6a 95%,
+    #ffa577 100%
+  );
+}
+
+.skyNight::before {
+  background: linear-gradient(
+    180deg,
+    #0a0a2e 0%,
+    #1b0f4a 22%,
+    #3a1a6b 45%,
+    #6b2a8a 70%,
+    #a93a89 92%,
+    #e06680 100%
+  );
+}
+
+@keyframes skyPulse {
+  0%, 100% { filter: hue-rotate(0deg) saturate(1); }
+  50% { filter: hue-rotate(15deg) saturate(1.15); }
+}
+
+@keyframes auroraDrift {
+  0%, 100% { transform: translateX(0) scale(1); opacity: 0.9; }
+  50% { transform: translateX(4%) scale(1.05); opacity: 1; }
+}
+
+.editControls {
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+  z-index: 20;
+  display: flex;
+  gap: 8px;
+}
+
+.editBtn {
+  @include button-base;
+  background: rgba(22, 33, 62, 0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(167, 139, 250, 0.35);
+  color: $text-primary;
+  box-shadow: $shadow-md;
+
+  &:hover {
+    background: rgba(124, 58, 237, 0.35);
+    border-color: $accent-purple-light;
+  }
+}
+
+.editBtnActive {
+  background: rgba(16, 185, 129, 0.35);
+  border-color: $accent-green;
+}
+
+.resetBtn {
+  @include button-base;
+  width: 40px;
+  padding: 10px;
+  background: rgba(22, 33, 62, 0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  color: $text-primary;
+  font-size: 18px;
+
+  &:hover {
+    background: rgba(239, 68, 68, 0.3);
+  }
+}
+
+.editHint {
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+  padding: 10px 18px;
+  background: rgba(22, 33, 62, 0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(167, 139, 250, 0.35);
+  border-radius: $radius-full;
+  font-size: 13px;
+  color: $text-primary;
+  box-shadow: $shadow-md;
+  animation: hintFloat 2s ease-in-out infinite;
+}
+
+@keyframes hintFloat {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(-3px); }
+}

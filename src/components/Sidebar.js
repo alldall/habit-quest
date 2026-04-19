@@ -2,7 +2,7 @@
 
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styles from './Sidebar.module.scss';
 
 const navItems = [
@@ -14,26 +14,60 @@ const navItems = [
 
 export default function Sidebar() {
   const pathname = usePathname();
-  const [mobileOpen, setMobileOpen] = useState(false);
+  const [open, setOpen] = useState(true);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const mq = window.matchMedia('(max-width: 767px)');
+    setOpen(!mq.matches);
+    const onChange = (e) => setOpen(!e.matches);
+    mq.addEventListener('change', onChange);
+    return () => mq.removeEventListener('change', onChange);
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const mq = window.matchMedia('(max-width: 767px)');
+    if (mq.matches) setOpen(false);
+  }, [pathname]);
+
+  useEffect(() => {
+    if (typeof document === 'undefined') return;
+    document.body.dataset.sidebar = open ? 'open' : 'closed';
+    return () => {
+      delete document.body.dataset.sidebar;
+    };
+  }, [open]);
+
+  const toggle = () => setOpen((v) => !v);
 
   return (
     <>
       <button
-        className={styles.burger}
-        onClick={() => setMobileOpen(!mobileOpen)}
-        aria-label="Toggle menu"
+        type="button"
+        className={`${styles.burger} ${open ? styles.burgerOpen : ''}`}
+        onClick={toggle}
+        aria-label={open ? 'Скрыть меню' : 'Показать меню'}
+        aria-expanded={open}
       >
-        <span className={`${styles.burgerLine} ${mobileOpen ? styles.open : ''}`} />
+        <span className={styles.burgerBox}>
+          <span className={styles.burgerLine} />
+          <span className={styles.burgerLine} />
+          <span className={styles.burgerLine} />
+        </span>
       </button>
 
-      {mobileOpen && (
+      {open && (
         <div
           className={styles.overlay}
-          onClick={() => setMobileOpen(false)}
+          onClick={() => setOpen(false)}
+          aria-hidden
         />
       )}
 
-      <aside className={`${styles.sidebar} ${mobileOpen ? styles.sidebarOpen : ''}`}>
+      <aside
+        className={`${styles.sidebar} ${open ? styles.sidebarOpen : styles.sidebarClosed}`}
+      >
         <div className={styles.logo}>
           <span className={styles.logoIcon}>🎮</span>
           <span className={styles.logoText}>HabitQuest</span>
@@ -47,7 +81,6 @@ export default function Sidebar() {
                 key={item.href}
                 href={item.href}
                 className={`${styles.navItem} ${isActive ? styles.active : ''}`}
-                onClick={() => setMobileOpen(false)}
               >
                 <span className={styles.navIcon}>{item.icon}</span>
                 <span className={styles.navLabel}>{item.label}</span>

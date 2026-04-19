@@ -72,10 +72,19 @@ input, textarea, select {
   margin-left: 220px;
   padding: 24px;
   min-height: 100vh;
+  transition: margin-left $transition-base;
 
   @include mobile {
     margin-left: 0;
     padding: 16px;
-    padding-top: 64px;
+    padding-top: 76px;
+  }
+}
+
+body[data-sidebar='closed'] .main-content {
+  margin-left: 0;
+
+  @include mobile {
+    padding-top: 76px;
   }
 }

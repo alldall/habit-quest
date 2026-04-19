@@ -1,15 +1,27 @@
 'use client';
 
 import { STAT_TYPES } from '@/lib/constants';
-import { calculateXpProgress } from '@/lib/gameEngine';
+import { calculateXpProgress, getOverallXp } from '@/lib/gameEngine';
 import styles from './StatsOverlay.module.scss';
 
 export default function StatsOverlay({ stats, overallLevel, todayProgress }) {
+  const totalXp = getOverallXp(stats);
+  const overallProgress = calculateXpProgress(totalXp);
+
   return (
     <div className={styles.overlay}>
       <div className={styles.levelBadge}>
         <span className={styles.levelNumber}>{overallLevel}</span>
         <span className={styles.levelLabel}>уровень</span>
+        <div className={styles.levelBar}>
+          <div
+            className={styles.levelFill}
+            style={{ width: `${overallProgress.percentage}%` }}
+          />
+        </div>
+        <span className={styles.levelXp}>
+          {overallProgress.current}/{overallProgress.needed} XP
+        </span>
       </div>
 
       <div className={styles.todayCard}>
@@ -42,7 +54,7 @@ export default function StatsOverlay({ stats, overallLevel, todayProgress }) {
               <div className={styles.statBar}>
                 <div
                   className={styles.statFill}
-                  style={{ width: `${progress}%`, background: stat.color }}
+                  style={{ width: `${progress.percentage}%`, background: stat.color }}
                 />
               </div>
             </div>

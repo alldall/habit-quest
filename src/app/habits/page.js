@@ -3,9 +3,10 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useGame } from '@/components/GameProvider';
-import { STAT_TYPES } from '@/lib/constants';
+import { STAT_TYPES, DIFFICULTY_LEVELS, DEFAULT_DIFFICULTY } from '@/lib/constants';
 import { calculateStreak, getXpForCompletion } from '@/lib/gameEngine';
 import HabitModal from '@/components/habits/HabitModal';
+import RewardPopup from '@/components/habits/RewardPopup';
 import styles from './page.module.scss';
 
 export default function HabitsPage() {
@@ -19,6 +20,8 @@ export default function HabitsPage() {
     deleteHabit,
     isHabitCompletedToday,
     getHabitStreak,
+    rewardEvent,
+    clearRewardEvent,
   } = useGame();
 
   const [modalOpen, setModalOpen] = useState(false);
@@ -75,7 +78,8 @@ export default function HabitsPage() {
             const completed = isHabitCompletedToday(habit.id);
             const streak = getHabitStreak(habit.id);
             const stat = STAT_TYPES[habit.stat];
-            const xpGain = getXpForCompletion(streak);
+            const diff = DIFFICULTY_LEVELS[habit.difficulty || DEFAULT_DIFFICULTY];
+            const xpGain = getXpForCompletion(streak, habit.difficulty);
 
             return (
               <motion.div
@@ -116,6 +120,13 @@ export default function HabitsPage() {
                     >
                       {stat.icon} {stat.name}
                     </span>
+                    <span
+                      className={styles.diffBadge}
+                      style={{ color: diff.color, borderColor: diff.color }}
+                      title={`×${diff.multiplier} XP`}
+                    >
+                      {diff.icon} {diff.name}
+                    </span>
                     {streak > 0 && (
                       <span className={styles.streak}>
                         🔥 {streak} {streak >= 7 ? '(x1.5)' : ''}
@@ -150,6 +161,8 @@ export default function HabitsPage() {
           />
         )}
       </AnimatePresence>
+
+      <RewardPopup event={rewardEvent} onDone={clearRewardEvent} />
     </div>
   );
 }
